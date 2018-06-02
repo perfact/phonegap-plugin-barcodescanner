@@ -496,8 +496,18 @@ parentViewController:(UIViewController*)parentViewController
         if([device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
             [device setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
         }
-        if([device isAutoFocusRangeRestrictionSupported]) {
-            [device setAutoFocusRangeRestriction:AVCaptureAutoFocusRangeRestrictionNear];
+        // JJ 2017-09-06: Restricting to near focus is not actually so useful.
+        // Consequence: The stock camera is also restricted, which leads to focus
+        // limitations when using the camera and the barcode scanner in the same app.
+        // Besides, we should also be able to scan barcodes that are far away...
+
+        // if([device isAutoFocusRangeRestrictionSupported]) {
+        //     [device setAutoFocusRangeRestriction:AVCaptureAutoFocusRangeRestrictionNear];
+        // }
+
+	// JJ 2017-09-06: Barcode reading works so much more better with the lights on..
+        if([device hasTorch]) {
+	  [device setTorchMode:AVCaptureTorchModeOn];
         }
     }
     [device unlockForConfiguration];
